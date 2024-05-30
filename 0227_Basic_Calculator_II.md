@@ -29,7 +29,7 @@ Output: 5
 ## Solution with Stack
 ### Intuition:
 - Process one pair of numbers at a time. 
-- Assume first number is already processed and process second number
+- Assume first number is already processed and stored in stack. Just process second number based on the last operator
 - A + B => Assuming A is already processed, if lastOp is '+' => push B into stack
 - A - B => Assuming A is already processed, if lastOp is '-' => push -B into stack 
 - A * B => Assuming A is already processed, if lastOp is '*' => pop, multiply with B, push result into stack
@@ -38,7 +38,7 @@ Output: 5
 ### Why do I assume A is processed already
 - For a given expression, we process from left to right
 - Instead of consfusing around the edge cases, we can assume string with additional prefix and suffix. For example
-  - A * B + C => `0 ? `A * B + C` ?`
+  - A * B + C => `0 ? A * B + C ?`
   - val is init to 0
   - lastOp is init to ?
   - end of string is marked by ? => this helps in processing the final value in the expression
@@ -94,34 +94,37 @@ Consider the expression and pointers below:
          A + B * C - D * E
   c1 lp c2 c
 ```
-c1 = operand1
-c2 = operand2
-lp = last operation
-c = current operation
+Where
+- c1 = operand1
+- c2 = operand2
+- lp = last operation
+- c = current operation
 
 These four pointers slides together.
-- First, iteartively c2 is calculated
-- when c is intercepted, depending on lp, we update the variables and move the window forward:
+- First, iteratively c2 is calculated
+- when a new operator(c) is intercepted, depending on lp, we update the variables and move the window forward:
 ```
 # iteration 1
-         A +  B * C - D * E
+        A  +  B * C - D * E
+        ^  ^  ^ ^
        c1 lp c2 c
 
 # iteration 2
-         A +  B * C - D * E
-             c1 lp c2 c
+         A +  B  *  C  - D * E
+              ^  ^  ^  ^
+             c1 lp c2  c
 . . .
  . . .
 ```
 
 ### Also Consider
-- if multiple *s are following:
+- if multiple * operations are following one another:
 Ex: A + B * C * D + E
   - keep updating the curr1 until +/- is intercepted
 
 - if only one number is the input
 Ex: 22
- - The cuur number1 should to be added after the loop
+ - The curr number1 should to be added after the loop
 
 - if only multiplication is in the expression
 Ex: 22 * 12 * 10
