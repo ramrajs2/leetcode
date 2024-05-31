@@ -95,3 +95,52 @@ class Solution {
     }
 }
 ```
+
+
+### Stab2
+Tried again. Updated k to k-1 to avoid confusions in the recursion method
+
+```
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        if(nums == null || nums.length == 0 || k <= 0 || k > nums.length)
+            return -1;
+        return findKthLargest(nums, 0, nums.length-1, k-1);
+    }
+
+    private int findKthLargest(int[] nums, int start, int end, int k) {
+        int p = partition(nums, start, end);
+        if(p == k)
+            return nums[p];
+        else if(k<p)
+            return findKthLargest(nums, start, p-1, k);
+        else
+            return findKthLargest(nums, p+1, end, k);
+    }
+
+    private int partition(int[] nums, int start, int end) {
+        int l = start;
+        int r = end;
+
+        while(l<r) {
+            if(nums[l+1] >= nums[l]) {
+                swap(nums, l, l+1);
+                l++;
+            }
+            else if(nums[r] < nums[l]) {
+                r--;
+            }
+            else {
+                swap(nums, l+1, r);
+            }
+        }
+        return l;
+    }
+
+    private void swap(int nums[], int p1, int p2) {
+        int tmp = nums[p1];
+        nums[p1] = nums[p2];
+        nums[p2] = tmp;
+    }
+}
+```
